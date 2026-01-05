@@ -79,16 +79,10 @@ vii) Inference
 # Repository Structure
 
 Design_and_Simulation
-Contains schematics and simulation outputs for 6T–12T SRAM cells.
 
 Results_and_Inference
-Includes comparison tables and performance analysis.
-
-Report
-Contains the complete project report in PDF format.
 
 README.md
-Project overview and documentation.
 
 
 
