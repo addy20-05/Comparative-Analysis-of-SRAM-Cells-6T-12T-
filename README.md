@@ -1,81 +1,142 @@
-# Comparative-Analysis-of-SRAM-Cells-6T-12T-
-Comparative analysis of SRAM cell topologies (6T–12T) using Cadence Virtuoso, focusing on Static Noise Margin, DC power, and transient power to study stability–power trade-offs in VLSI memory design.
+# Comparative Analysis of SRAM Cells — 6T to 12T
 
+Design and simulation of five SRAM topologies (6T, 7T, 8T, 10T, 12T) in Cadence Virtuoso, evaluated on Static Noise Margin, DC power, and transient power consumption.
 
-# Project Overview
+---
 
-This repository presents a comparative analysis of SRAM cell topologies, including 6T, 7T, 8T, 10T, and 12T SRAM cells, designed and simulated using Cadence Virtuoso. The objective of this project is to study the trade-offs between stability, power consumption, and performance across different SRAM architectures under identical operating conditions.
+## Overview
 
-SRAM plays a critical role in modern VLSI systems, and selecting the appropriate cell topology is essential for achieving reliable and energy-efficient memory designs.
+This project compares standard and extended SRAM cell architectures at the transistor level. Each topology was designed from scratch in Cadence Virtuoso and simulated using DC and transient analyses. The goal was to quantify the trade-offs between stability, power, and transistor count across all five designs.
 
-# Objectives
+All simulations were run at VDD = 1.8V using a standard CMOS process.
 
-->Design SRAM cells (6T, 7T, 8T, 10T, 12T) at the transistor level
+---
 
-->Analyze Static Noise Margin (SNM) for stability evaluation
+## Topologies Covered
 
-->Measure DC (static) power and transient (dynamic) power
+| Topology | Transistor Count | Read Path | Write Path |
+|---|---|---|---|
+| 6T | 6 | Shared (BL/BLB) | Shared (BL/BLB) |
+| 7T | 7 | Separate (RBL) | BL |
+| 8T | 8 | Isolated read buffer | BL |
+| 10T | 10 | Differential read buffer | WBL/WBLB |
+| 12T | 12 | Fully decoupled | WBL/WBLB |
 
-->Compare design trade-offs between different SRAM architectures
+---
 
-->Identify suitable SRAM cells for low-power and high-reliability applications
+## Results
 
-# Tools & Platform
+![Comparison Table](results/comparison_table.png)
 
-->Cadence Virtuoso
+| Topology | Transient Power (uW) | DC Power (uW) | NMH (V) | NML (V) |
+|---|---|---|---|---|
+| 6T  | 77.73  | 4.72  | 0.938 | 0.611 |
+| 7T  | 97.40  | 5.19  | 0.915 | 0.390 |
+| 8T  | 251.70 | 40.69 | 0.825 | 0.611 |
+| 10T | 217.70 | 58.24 | 0.899 | 0.611 |
+| 12T | 296.90 | 55.62 | 1.060 | 0.420 |
 
-->CMOS Technology (VDD = 1.8 V)
+**Key observations:**
+- 6T has the lowest power consumption but the weakest read stability due to the shared read/write path
+- 8T and 10T offer a balanced improvement — separate read paths reduce read disturbance significantly
+- 12T achieves the highest NMH (1.06V) with fully decoupled read and write, at the cost of highest area and power
+- 7T offers a minimal overhead improvement over 6T with marginal gain in read SNM
 
-->DC and Transient Simulation Analysis
+---
 
-# SRAM Architectures Implemented
+## Schematics
 
-6T SRAM – Conventional and area-efficient
+| 6T | 7T |
+|---|---|
+| ![6T](schematics/6T_schematic.png) | ![7T](schematics/7T_schematic.png) |
 
-7T SRAM – Improved read stability with an additional transistor
+| 8T | 10T |
+|---|---|
+| ![8T](schematics/8T_schematic.png) | ![10T](schematics/10T_schematic.png) |
 
-8T SRAM – Decoupled read/write paths for enhanced robustness
+| 12T |
+|---|
+| ![12T](schematics/12T_schematic.png) |
 
-10T SRAM – Differential read buffer for higher noise immunity
+---
 
-12T SRAM – Fully decoupled design offering maximum stability
+## Simulation Plots
 
-# Methodology
+### Butterfly Curves (SNM Analysis)
 
-->SRAM schematics were designed in Cadence Virtuoso
+SNM was extracted using the butterfly curve method — overlaying the VTC of both cross-coupled inverters, one mirrored horizontally. The largest inscribed square determines the SNM value.
 
-->DC analysis was performed to obtain voltage transfer characteristics
+| 6T Butterfly | 7T Butterfly |
+|---|---|
+| ![](simulations/6T_butterfly_curve.png) | ![](simulations/7T_butterfly_curve.png) |
 
-->Butterfly curves were used to calculate Static Noise Margin (SNM)
+### DC Transfer Characteristics
 
-->Transient simulations were carried out during read/write operations
+| 6T DC | 8T DC | 10T DC |
+|---|---|---|
+| ![](simulations/6T_dc_curve.png) | ![](simulations/8T_dc_curve.png) | ![](simulations/10T_dc_curve.png) |
 
-->DC power and transient power were extracted
+### Transient Power
 
-All SRAM cells were compared under identical conditions
+Dynamic power was measured during read/write switching operations.
 
+| 6T | 8T | 10T |
+|---|---|---|
+| ![](simulations/6T_transient_power.png) | ![](simulations/8T_transient_power.png) | ![](simulations/10T_transient_power.png) |
 
-# Inference
+---
 
-6T SRAM offers minimum area and power but lower noise margins
+## Simulation Setup
 
-7T SRAM improves read stability with slight overhead
+- Tool: Cadence Virtuoso (Analog Design Environment)
+- Supply voltage: VDD = 1.8V
+- DC analysis: butterfly curve method for SNM extraction
+- Transient analysis: dynamic power during read/write cycles
+- Process: standard CMOS (180nm node)
 
-8T SRAM eliminates read disturb by isolating the read path
+---
 
-10T SRAM provides strong stability and higher noise immunity
+## Design Observations
 
-12T SRAM achieves the highest SNM and is suitable for ultra-low-power, high-reliability applications
+**6T:** Minimal area, lowest power. Read and write share the same bit lines, which degrades read SNM due to voltage contention at the storage node during access.
 
+**7T:** An additional NMOS between the inverter loop and GND partially isolates the storage node during reads. Marginal SNM improvement over 6T.
 
-# Repository Structure
+**8T:** Dedicated read port using a two-transistor read buffer (M6, M7) completely decouples the read path from storage nodes. Eliminates read disturbance. Power increases significantly.
 
-Design_and_Simulation
+**10T:** Fully differential read buffer (M7-M10) with a separate read word line. Improved read SNM and better noise rejection. Higher transistor overhead.
 
-Results_and_Inference
+**12T:** Read and write paths are fully independent. Write uses NMOS pass gates (M5, M6 via WWL), read uses a sense-amplifier-style buffer (M7-M12). Highest stability, highest area.
 
-README.md
+---
 
+## Repository Structure
 
+```
+Comparative-Analysis-of-SRAM-Cells-6T-12T/
+├── schematics/        Cadence schematic screenshots for each topology
+├── simulations/       DC curves, butterfly curves, transient plots
+├── docs/              Design report and results PDF
+├── results/           Summary comparison table
+└── README.md
+```
 
+---
 
+## Tools
+
+- Cadence Virtuoso — schematic entry and simulation
+- Virtuoso Analog Design Environment (ADE) — DC and transient analysis
+- Virtuoso Visualization & Analysis XL — waveform viewing and power measurement
+
+---
+
+## Reference
+
+Designed and simulated as part of the VLSI Design course, B.E. Electronics and Communication Engineering.
+
+---
+
+## License
+
+MIT License — see [LICENSE](LICENSE) for details.
