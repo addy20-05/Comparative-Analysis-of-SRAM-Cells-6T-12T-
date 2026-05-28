@@ -76,13 +76,6 @@ SNM was extracted using the butterfly curve method — overlaying the VTC of bot
 |---|---|---|
 | ![](simulations/6T_dc_curve.png) | ![](simulations/8T_dc_curve.png) | ![](simulations/10T_dc_curve.png) |
 
-### Transient Power
-
-Dynamic power was measured during read/write switching operations.
-
-| 6T | 8T | 10T |
-|---|---|---|
-| ![](simulations/6T_transient_power.png) | ![](simulations/8T_transient_power.png) | ![](simulations/10T_transient_power.png) |
 
 ---
 
